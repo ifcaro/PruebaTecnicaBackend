@@ -8,7 +8,17 @@
 
   <ItemGroup>
     <PackageReference Include="MediatR" Version="12.1.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="7.0.10">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Polly" Version="7.2.4" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Vehicle.Domain\Vehicle.Domain.csproj" />
+    <ProjectReference Include="..\Vehicle.Infrastructure\Vehicle.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
