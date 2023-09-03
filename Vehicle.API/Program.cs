@@ -1,3 +1,4 @@
+using Vehicle.API.Application.Queries;
 using Vehicle.API.Extensions;
 using Vehicle.API.Infrastructure;
 using Vehicle.Domain.AggregatesModel.VehicleAggregate;
@@ -19,6 +20,7 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining(typeof(Program));
 });
 
+builder.Services.AddScoped<IVehicleQueries>(sp => new VehicleQueries(builder.Configuration.GetConnectionString("VehiclesDB")!));
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 
 var app = builder.Build();
