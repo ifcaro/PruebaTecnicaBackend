@@ -27,7 +27,12 @@ namespace Vehicle.Domain.AggregatesModel.VehicleAggregate
 
         public void AddOrder(Guid orderId)
         {
-            Orders.Add(new Order(orderId));
+            Orders.Add(new Order(orderId, DateTime.UtcNow));
+        }
+
+        public void RemoveOrder(Guid orderId)
+        {
+            Orders.FirstOrDefault(x => x.OrderId == orderId && x.DateRemoved == null)?.SetDateRemoved(DateTime.UtcNow);
         }
     }
 }

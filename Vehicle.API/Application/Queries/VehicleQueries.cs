@@ -70,6 +70,49 @@ namespace Vehicle.API.Application.Queries
             }
         }
 
+        public async Task<VehicleOrders> GetVehicleOrdersAsync(Guid vehicleId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var result = await connection.QueryAsync<dynamic>(
+                    @"select v.[Id] as VehicleId, o.OrderId, o.DateAdded 
+                        FROM Vehicle v
+                        LEFT JOIN [Order] o
+                            ON o.VehicleId = v.Id
+                            AND o.DateRemoved IS NULL
+                        WHERE v.Id = @vehicleId"
+                    , new { vehicleId }
+                );
+
+                return MapVehicleOrderList(result);
+            }
+        }
+
+        public async Task<Vehicle> GetVehicleByOrderAsync(Guid orderId)
+        {
+            using (var connection = new SqlConnection(_connectionString))
+            {
+                connection.Open();
+
+                var result = await connection.QueryAsync<dynamic>(
+                    @"select v.[Id] as VehicleId, v.CurrentLocation 
+                        FROM Vehicle v
+                        INNER JOIN [Order] o
+                            ON o.VehicleId = v.Id
+                            AND o.DateRemoved IS NULL
+                        WHERE o.OrderId = @orderId"
+                    , new { orderId }
+                );
+
+                if (result.AsList().Count == 0)
+                    throw new KeyNotFoundException();
+
+                return MapVehicle(result);
+            }
+        }
+
         private IEnumerable<Vehicle> MapVehicleList(dynamic result)
         {
             var vehicleList = new List<Vehicle>();
@@ -119,6 +162,31 @@ namespace Vehicle.API.Application.Queries
             }
 
             return vehicleLocationHistory;
+        }
+
+        private VehicleOrders MapVehicleOrderList(dynamic result)
+        {
+            var vehicleOrders = new VehicleOrders
+            {
+                VehicleId = result[0].VehicleId,
+                Orders = new List<VehicleOrder>()
+            };
+
+            foreach (dynamic item in result)
+            {
+                if (item.OrderId != null)
+                {
+                    var vehicleOrder = new VehicleOrder
+                    {
+                        OrderId = item.OrderId,
+                        DateAdded = item.DateAdded
+                    };
+
+                    vehicleOrders.Orders.Add(vehicleOrder);
+                }
+            }
+
+            return vehicleOrders;
         }
     }
 }

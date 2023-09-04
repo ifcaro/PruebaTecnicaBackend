@@ -24,6 +24,8 @@ namespace Vehicle.API.Controllers
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
+        #region Location
+
         [HttpGet]
         [Route("location")]
         public async Task<ActionResult<Application.Queries.Vehicle>> GetAllVehiclesLocation()
@@ -99,5 +101,99 @@ namespace Vehicle.API.Controllers
 
             return Ok();
         }
+
+        #endregion
+
+        #region Order
+
+        [HttpGet]
+        [Route("order/{orderId}")]
+        public async Task<ActionResult<Application.Queries.Vehicle>> GetVehicleByOrder(Guid orderId)
+        {
+            try
+            {
+                var vehicleOrderList = await _vehicleQueries.GetVehicleByOrderAsync(orderId);
+
+                return Ok(vehicleOrderList);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        [Route("{vehicleId}/order")]
+        public async Task<ActionResult<Application.Queries.Vehicle>> GetAllVehicleOrders(Guid vehicleId)
+        {
+            try
+            {
+                var vehicleOrderList = await _vehicleQueries.GetVehicleOrdersAsync(vehicleId);
+
+                return Ok(vehicleOrderList);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpPost]
+        [Route("{vehicleId}/order")]
+        public async Task<IActionResult> AddOrder(Guid vehicleId, [FromBody] Order order)
+        {
+            bool commandResult = false;
+
+            if (vehicleId != Guid.Empty)
+            {
+                var addOrderCommand = new AddOrderCommand(vehicleId, order.OrderId);
+
+                _logger.LogInformation(
+                    "Sending command: {CommandName} - {VehicleId}: {OrderId} ({@Command})",
+                    addOrderCommand.GetType().Name,
+                    addOrderCommand.VehicleId,
+                    addOrderCommand.OrderId,
+                    addOrderCommand);
+
+                commandResult = await _mediator.Send(addOrderCommand);
+            }
+
+            if (!commandResult)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        [HttpDelete]
+        [Route("{vehicleId}/order/{orderId}")]
+        public async Task<IActionResult> DeleteOrder(Guid vehicleId, Guid orderId)
+        {
+            bool commandResult = false;
+
+            if (vehicleId != Guid.Empty)
+            {
+                var removeOrderCommand = new RemoveOrderCommand(vehicleId, orderId);
+
+                _logger.LogInformation(
+                    "Sending command: {CommandName} - {VehicleId}: {OrderId} ({@Command})",
+                    removeOrderCommand.GetType().Name,
+                    removeOrderCommand.VehicleId,
+                    removeOrderCommand.OrderId,
+                    removeOrderCommand);
+
+                commandResult = await _mediator.Send(removeOrderCommand);
+            }
+
+            if (!commandResult)
+            {
+                return BadRequest();
+            }
+
+            return Ok();
+        }
+
+        #endregion
     }
 }

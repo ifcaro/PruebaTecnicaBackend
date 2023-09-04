@@ -18,4 +18,16 @@
 
         public List<Location> LocationHistory { get; init; } = default!;
     }
+
+    public record VehicleOrders
+    {
+        public Guid VehicleId { get; init; }
+        public List<VehicleOrder> Orders { get; init; } = default!;
+    }
+
+    public record VehicleOrder
+    {
+        public Guid OrderId { get; init; }
+        public DateTime DateAdded { get; init; }
+    }
 }

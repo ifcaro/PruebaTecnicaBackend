@@ -4,11 +4,21 @@ namespace Vehicle.Domain.AggregatesModel.VehicleAggregate
 {
     public class Order : Entity
     {
+        public Guid OrderId { get; private set; }
+        public DateTime DateAdded { get; private set; }
+        public DateTime? DateRemoved { get; private set; }
+
         protected Order() { }
 
-        public Order(Guid orderId)
+        public Order(Guid orderId, DateTime dateAdded)
         {
-            Id = orderId;
+            OrderId = orderId;
+            DateAdded = dateAdded;
+        }
+
+        public void SetDateRemoved(DateTime dateRemoved)
+        {
+            DateRemoved = dateRemoved;
         }
     }
 }

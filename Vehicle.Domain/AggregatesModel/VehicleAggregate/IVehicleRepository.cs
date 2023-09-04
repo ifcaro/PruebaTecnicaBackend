@@ -6,6 +6,8 @@ namespace Vehicle.Domain.AggregatesModel.VehicleAggregate
     {
         Task<Vehicle> GetAsync(Guid vehicleId);
 
+        Task<Vehicle> GetByOrderIdAsync(Guid orderId);
+
         Vehicle Add(Vehicle vehicle);
     }
 }
