@@ -26,9 +26,13 @@ namespace Vehicle.API.Controllers
 
         #region Location
 
+        /// <summary>
+        /// Obtiene la ubicación de todos los vehiculos registrados
+        /// </summary>
+        /// <returns>Returns list of <see cref="Application.Queries.Vehicle"/>Vehicle</returns>
         [HttpGet]
         [Route("location")]
-        public async Task<ActionResult<Application.Queries.Vehicle>> GetAllVehiclesLocation()
+        public async Task<ActionResult<IEnumerable<Application.Queries.Vehicle>>> GetAllVehiclesLocation()
         {
             try
             {
@@ -42,6 +46,11 @@ namespace Vehicle.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtiene la ubicación de un vehiculo
+        /// </summary>
+        /// <param name="vehicleId">Identificador del vehiculo</param>
+        /// <returns><see cref="Application.Queries.Vehicle"/>Vehicle</returns>
         [HttpGet]
         [Route("{vehicleId}/location")]
         public async Task<ActionResult<Application.Queries.Vehicle>> GetVehicleLocation(Guid vehicleId)
@@ -58,9 +67,14 @@ namespace Vehicle.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtiene el historial de ubicaciones de un vehiculo
+        /// </summary>
+        /// <param name="vehicleId">Identificador del vehiculo</param>
+        /// <returns><see cref="VehicleLocationHistory"/>VehicleLocationHistory</returns>
         [HttpGet]
         [Route("{vehicleId}/location/history")]
-        public async Task<ActionResult<Application.Queries.Vehicle>> GetVehicleLocationHistory(Guid vehicleId)
+        public async Task<ActionResult<VehicleLocationHistory>> GetVehicleLocationHistory(Guid vehicleId)
         {
             try
             {
@@ -74,6 +88,11 @@ namespace Vehicle.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Establece la ubicación de un vehiculo. Se creará el vehiculo si este no figura en el sistema
+        /// </summary>
+        /// <param name="vehicleId">Identificador del vehiculo</param>
+        /// <param name="vehicleLocation">Ubicación del vehiculo</param>
         [HttpPost]
         [Route("{vehicleId}/location")]
         public async Task<IActionResult> SetVehicleLocation(Guid vehicleId, [FromBody] VehicleLocation vehicleLocation)
@@ -106,6 +125,11 @@ namespace Vehicle.API.Controllers
 
         #region Order
 
+        /// <summary>
+        /// Obtiene el vehiculo que contiene un pedido
+        /// </summary>
+        /// <param name="orderId">Identificador del pedido</param>
+        /// <returns><see cref="Application.Queries.Vehicle"/>Vehicle</returns>
         [HttpGet]
         [Route("order/{orderId}")]
         public async Task<ActionResult<Application.Queries.Vehicle>> GetVehicleByOrder(Guid orderId)
@@ -122,9 +146,14 @@ namespace Vehicle.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Obtiene todos los pedidos de un vehiculo
+        /// </summary>
+        /// <param name="vehicleId">Identificador del vehiculo</param>
+        /// <returns><see cref="VehicleOrders"/>VehicleOrders</returns>
         [HttpGet]
         [Route("{vehicleId}/order")]
-        public async Task<ActionResult<Application.Queries.Vehicle>> GetAllVehicleOrders(Guid vehicleId)
+        public async Task<ActionResult<VehicleOrders>> GetAllVehicleOrders(Guid vehicleId)
         {
             try
             {
@@ -138,6 +167,11 @@ namespace Vehicle.API.Controllers
             }
         }
 
+        /// <summary>
+        /// Agrega un pedido a un vehiculo
+        /// </summary>
+        /// <param name="vehicleId">Identificador del vehiculo</param>
+        /// <param name="order">Información del pedido</param>
         [HttpPost]
         [Route("{vehicleId}/order")]
         public async Task<IActionResult> AddOrder(Guid vehicleId, [FromBody] Order order)
@@ -166,6 +200,11 @@ namespace Vehicle.API.Controllers
             return Ok();
         }
 
+        /// <summary>
+        /// Elimina un pedido de un vehiculo
+        /// </summary>
+        /// <param name="vehicleId">Identificador del vehiculo</param>
+        /// <param name="orderId">Identificador del pedido</param>
         [HttpDelete]
         [Route("{vehicleId}/order/{orderId}")]
         public async Task<IActionResult> DeleteOrder(Guid vehicleId, Guid orderId)

@@ -5,9 +5,14 @@ VisualStudioVersion = 17.7.34024.191
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vehicle.API", "Vehicle.API\Vehicle.API.csproj", "{E797249A-1454-4249-85AA-8700E538AE27}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vehicle.Domain", "Vehicle.Domain\Vehicle.Domain.csproj", "{22EADA37-DB5D-41A6-AFF4-A15393CBA0D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vehicle.Domain", "Vehicle.Domain\Vehicle.Domain.csproj", "{22EADA37-DB5D-41A6-AFF4-A15393CBA0D5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Vehicle.Infrastructure", "Vehicle.Infrastructure\Vehicle.Infrastructure.csproj", "{384C64FF-D2A7-48EB-959E-59F044BEAA5B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Vehicle.Infrastructure", "Vehicle.Infrastructure\Vehicle.Infrastructure.csproj", "{384C64FF-D2A7-48EB-959E-59F044BEAA5B}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{4CD46167-42C7-4B98-AD21-5CEB8490C6BF}"
+	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
