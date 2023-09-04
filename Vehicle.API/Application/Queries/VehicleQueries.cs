@@ -23,9 +23,6 @@ namespace Vehicle.API.Application.Queries
                         FROM Vehicle v"
                 );
 
-                if (result.AsList().Count == 0)
-                    throw new KeyNotFoundException();
-
                 return MapVehicleList(result);
             }
         }
