@@ -1,4 +1,5 @@
 ﻿using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Vehicle.API.Application.Commands;
 using Vehicle.API.Application.Models;
@@ -6,6 +7,7 @@ using Vehicle.API.Application.Queries;
 
 namespace Vehicle.API.Controllers
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class VehicleController : ControllerBase

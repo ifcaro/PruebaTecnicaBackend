@@ -1,5 +1,7 @@
+using Microsoft.OpenApi.Models;
 using System.Reflection;
 using Vehicle.API.Application.Queries;
+using Vehicle.API.Authentication;
 using Vehicle.API.Extensions;
 using Vehicle.API.Infrastructure;
 using Vehicle.Domain.AggregatesModel.VehicleAggregate;
@@ -19,6 +21,26 @@ builder.Services.AddSwaggerGen(c =>
     var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
     var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
     c.IncludeXmlComments(xmlPath);
+
+    c.AddSecurityDefinition("Basic", new OpenApiSecurityScheme
+    {
+        Description = "Basic auth added to authorization header",
+        Name = "Authorization",
+        In = ParameterLocation.Header,
+        Scheme = "basic",
+        Type = SecuritySchemeType.Http
+    });
+
+    c.AddSecurityRequirement(new OpenApiSecurityRequirement
+    {
+        {
+            new OpenApiSecurityScheme
+            {
+                Reference = new OpenApiReference { Type = ReferenceType.SecurityScheme, Id = "Basic" }
+            },
+            new List<string>()
+        }
+    });
 });
 builder.Services.AddDbContexts(builder.Configuration);
 
@@ -29,6 +51,11 @@ builder.Services.AddMediatR(cfg =>
 
 builder.Services.AddScoped<IVehicleQueries>(sp => new VehicleQueries(builder.Configuration.GetConnectionString("VehiclesDB")!));
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
+
+//Set up basic authentication
+builder.Services.AddAuthentication("BasicAuthentication")
+    .AddScheme<Microsoft.AspNetCore.Authentication.AuthenticationSchemeOptions, BasicAuthenticationHandler>("BasicAuthentication", null);
+
 
 var app = builder.Build();
 
@@ -41,6 +68,7 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
