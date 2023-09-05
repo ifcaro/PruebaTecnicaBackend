@@ -5,10 +5,14 @@ namespace Vehicle.API.Application.Commands
 {
     public class AddOrderCommandHandler : IRequestHandler<AddOrderCommand, bool>
     {
+        private readonly IMediator _mediator;
         private readonly IVehicleRepository _vehicleRepository;
 
-        public AddOrderCommandHandler(IVehicleRepository vehicleRepository)
+        public AddOrderCommandHandler(
+            IMediator mediator,
+            IVehicleRepository vehicleRepository)
         {
+            _mediator = mediator;
             _vehicleRepository = vehicleRepository;
         }
 
@@ -28,14 +32,21 @@ namespace Vehicle.API.Application.Commands
 
             var anotherVehicleWithOrder = await _vehicleRepository.GetByOrderIdAsync(command.OrderId);
 
-            if(anotherVehicleWithOrder != null!)
+            if (anotherVehicleWithOrder != null!)
             {
                 return false;
             }
 
-            vehicleToUpdate.AddOrder(command.OrderId);
+            var order = vehicleToUpdate.AddOrder(command.OrderId);
 
-            return await _vehicleRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            var result = await _vehicleRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+
+            if (result)
+            {
+                await _mediator.Send(new NotifyOrderAddedCommand(command.VehicleId, order), cancellationToken);
+            }
+
+            return result;
         }
     }
 }

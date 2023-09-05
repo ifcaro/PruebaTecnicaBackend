@@ -5,10 +5,14 @@ namespace Vehicle.API.Application.Commands
 {
     public class SetVehicleLocationCommandHandler : IRequestHandler<SetVehicleLocationCommand, bool>
     {
+        private readonly IMediator _mediator;
         private readonly IVehicleRepository _vehicleRepository;
 
-        public SetVehicleLocationCommandHandler(IVehicleRepository vehicleRepository)
+        public SetVehicleLocationCommandHandler(
+            IMediator mediator, 
+            IVehicleRepository vehicleRepository)
         {
+            _mediator = mediator;
             _vehicleRepository = vehicleRepository;
         }
 
@@ -24,7 +28,14 @@ namespace Vehicle.API.Application.Commands
 
             vehicleToUpdate.SetCurrentLocation(command.Location);
 
-            return await _vehicleRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            var result = await _vehicleRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+
+            if (result)
+            {
+                await _mediator.Send(new NotifyVehicleLocationChangedCommand(vehicleToUpdate), cancellationToken);
+            }
+
+            return result;
         }
     }
 }

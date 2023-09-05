@@ -4,6 +4,7 @@ using Vehicle.API.Application.Queries;
 using Vehicle.API.Authentication;
 using Vehicle.API.Extensions;
 using Vehicle.API.Infrastructure;
+using Vehicle.API.RealTime;
 using Vehicle.Domain.AggregatesModel.VehicleAggregate;
 using Vehicle.Infrastructure;
 using Vehicle.Infrastructure.Repositories;
@@ -49,6 +50,8 @@ builder.Services.AddMediatR(cfg =>
     cfg.RegisterServicesFromAssemblyContaining(typeof(Program));
 });
 
+builder.Services.AddSignalR();
+
 builder.Services.AddScoped<IVehicleQueries>(sp => new VehicleQueries(builder.Configuration.GetConnectionString("VehiclesDB")!));
 builder.Services.AddScoped<IVehicleRepository, VehicleRepository>();
 
@@ -72,6 +75,8 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+app.MapHub<VehicleEventsClientHub>("/vehicle-events");
 
 using (var scope = app.Services.CreateScope())
 {

@@ -1,14 +1,19 @@
 ﻿using MediatR;
+using Vehicle.API.Application.Models;
 using Vehicle.Domain.AggregatesModel.VehicleAggregate;
 
 namespace Vehicle.API.Application.Commands
 {
     public class RemoveOrderCommandHandler : IRequestHandler<RemoveOrderCommand, bool>
     {
+        private readonly IMediator _mediator;
         private readonly IVehicleRepository _vehicleRepository;
 
-        public RemoveOrderCommandHandler(IVehicleRepository vehicleRepository)
+        public RemoveOrderCommandHandler(
+            IMediator mediator, 
+            IVehicleRepository vehicleRepository)
         {
+            _mediator = mediator;
             _vehicleRepository = vehicleRepository;
         }
 
@@ -26,9 +31,16 @@ namespace Vehicle.API.Application.Commands
                 return false;
             }
 
-            vehicleToUpdate.RemoveOrder(command.OrderId);
+            var order = vehicleToUpdate.RemoveOrder(command.OrderId);
 
-            return await _vehicleRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+            var result = await _vehicleRepository.UnitOfWork.SaveEntitiesAsync(cancellationToken);
+
+            if (result && order! != null!)
+            {
+                await _mediator.Send(new NotifyOrderRemovedCommand(command.VehicleId, order), cancellationToken);
+            }
+
+            return result;
         }
     }
 }

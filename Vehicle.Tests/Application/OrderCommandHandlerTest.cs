@@ -34,7 +34,7 @@ namespace Vehicle.Tests.Application
                 .Returns(Task.FromResult(true));
 
             //Act
-            var handler = new AddOrderCommandHandler(_vehicleRepositoryMock.Object);
+            var handler = new AddOrderCommandHandler(_mediator.Object, _vehicleRepositoryMock.Object);
             var cltToken = new System.Threading.CancellationToken();
             var result = await handler.Handle(fakeOrderCmd, cltToken);
 
@@ -62,7 +62,7 @@ namespace Vehicle.Tests.Application
                 .Returns(Task.FromResult(true));
 
             //Act
-            var handler = new AddOrderCommandHandler(_vehicleRepositoryMock.Object);
+            var handler = new AddOrderCommandHandler(_mediator.Object, _vehicleRepositoryMock.Object);
             var cltToken = new System.Threading.CancellationToken();
             var result = await handler.Handle(fakeOrderCmd, cltToken);
 
@@ -93,7 +93,7 @@ namespace Vehicle.Tests.Application
                 .Returns(Task.FromResult(true));
 
             //Act
-            var handler = new AddOrderCommandHandler(_vehicleRepositoryMock.Object);
+            var handler = new AddOrderCommandHandler(_mediator.Object, _vehicleRepositoryMock.Object);
             var cltToken = new System.Threading.CancellationToken();
             var result = await handler.Handle(fakeOrderCmd, cltToken);
 
@@ -118,7 +118,7 @@ namespace Vehicle.Tests.Application
                 .Returns(Task.FromResult(true));
 
             //Act
-            var handler = new RemoveOrderCommandHandler(_vehicleRepositoryMock.Object);
+            var handler = new RemoveOrderCommandHandler(_mediator.Object, _vehicleRepositoryMock.Object);
             var cltToken = new System.Threading.CancellationToken();
             var result = await handler.Handle(fakeOrderCmd, cltToken);
 
@@ -146,7 +146,7 @@ namespace Vehicle.Tests.Application
                 .Returns(Task.FromResult(true));
 
             //Act
-            var handler = new RemoveOrderCommandHandler(_vehicleRepositoryMock.Object);
+            var handler = new RemoveOrderCommandHandler(_mediator.Object, _vehicleRepositoryMock.Object);
             var cltToken = new System.Threading.CancellationToken();
             var result = await handler.Handle(fakeOrderCmd, cltToken);
 

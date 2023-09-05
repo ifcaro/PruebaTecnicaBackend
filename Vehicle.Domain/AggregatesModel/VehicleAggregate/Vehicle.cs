@@ -25,14 +25,22 @@ namespace Vehicle.Domain.AggregatesModel.VehicleAggregate
             LocationHistory.Add(new Location(DateTime.UtcNow, location));
         }
 
-        public void AddOrder(Guid orderId)
+        public Order AddOrder(Guid orderId)
         {
-            Orders.Add(new Order(orderId, DateTime.UtcNow));
+            var order = new Order(orderId, DateTime.UtcNow);
+
+            Orders.Add(order);
+
+            return order;
         }
 
-        public void RemoveOrder(Guid orderId)
+        public Order? RemoveOrder(Guid orderId)
         {
-            Orders.FirstOrDefault(x => x.OrderId == orderId && x.DateRemoved == null)?.SetDateRemoved(DateTime.UtcNow);
+            var order = Orders.FirstOrDefault(x => x.OrderId == orderId && x.DateRemoved == null);
+            
+            order?.SetDateRemoved(DateTime.UtcNow);
+
+            return order;
         }
     }
 }
